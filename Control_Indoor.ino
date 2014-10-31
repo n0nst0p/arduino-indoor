@@ -1,5 +1,4 @@
 
-
 /**
               Control Indoor para plantas.
 
@@ -245,7 +244,7 @@ void tem_hum_dia()
 if (temperatura >= 25)
     {
       digitalWrite(ventitacion, HIGH);
-      Serial.println("Calefaccion ON 30s por alta Temperatura ");
+      Serial.println("Ventilacion ON 30s por alta Temperatura ");
       delay(30000);
       digitalWrite(ventitacion, LOW);  
     } 
@@ -326,7 +325,7 @@ void agua()
 if (sensorValue <= 300 && sensorValue >= 0)
     {
         digitalWrite(bomba, HIGH);
-        Serial.println("Bomba ON 30s");
+        Serial.println("Bomba ON 30s por falta de agua en el sustrato");
         delay(30000);
         digitalWrite(bomba, LOW);   
     }
