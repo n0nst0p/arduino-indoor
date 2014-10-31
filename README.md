@@ -19,9 +19,9 @@ arduino-indoor
  - Detecta si la planta necesita agua.
  - Seleccion de que tipo de plantas son, feminizadas o autoflorecientes en el pin digital 8. 
  
- ********************  Es posible realizar el cambio de las horas de luz al compilar el codigo *****************************
+                            Es posible realizar el cambio de las horas de luz al compilar el codigo 
  
-******************************************* Para probar el codigo **********************************************************
+                            ************ Para probar el codigo **************
  
  ** Para realizar pruebas con los horarios, dias, etapas, agregar el dia de avance en el codigo " void setup()       EEPROM.write(address, 69); " 
  ** En este ejemplo esta en etapa de floracion, dia 69.  Luego cambiando la fecha en el reloj del PC en el cual compilan y luego cargando 
