@@ -1,4 +1,5 @@
 
+
 /**
               Control Indoor para plantas.
 
@@ -53,6 +54,7 @@ Detalles:
 #define clockPin A3
 int sensorPin = A1;     // Sensor de agua configurado en el pin analogo A1 
 int sensorValue = 0;    // Almacena el valor 0 en la variable sensorValue para el sensor de agua
+int reset = 9;          // Para reseter el contador de dias, si esta en alto.
 int modo = 8;           // Para seleccionar el modo de cultivo. autoflorecientes o feminizadas. en el pin 8
 int ventitacion = 7;    // Para activar la ventilacion en el pin digital 7
 int bomba = 6;          // Para activar la bomba de agua en el pin digital 6
@@ -60,7 +62,6 @@ int calefaccion =  5;   // Para activar la calefaccion con el pin digita 5
 int vaporizacion = 4;   // Para activar el evaporizador con el pin digital 4
 int extraccion  =  3;   // Para activar la extraccion del aire con el pin digital 3
 int luz  =  2;          // Para activar la extraccion del aire con el pin digital 2
-
 int dias;               // Para contar los dias transcurridos
 int conta;              //¨Para verificar el siguinte dia
 
@@ -79,9 +80,9 @@ void setup()
     pinMode(vaporizacion, OUTPUT);          // pone el pin como salida
     pinMode(luz, OUTPUT);                   // pone el pin como salida
     pinMode(modo, INPUT);                   // pone el pin como entrada
+    pinMode(reset, INPUT);                   // pone el pin como entrada    
     
-    
-    EEPROM.write(address, 69);              // Para realizar pruebas con los cambios de estapas. 
+    //EEPROM.write(address, 69);              // Para realizar pruebas con los cambios de estapas. 
     
 }
  
@@ -91,6 +92,11 @@ void loop()
   conta = now.day();
   dias = EEPROM.read(address);
 
+  if (digitalRead(reset) == HIGH)
+  {
+    dias = 0;    
+  } 
+  
   if (digitalRead(modo) == HIGH)
   {
     control_mensual_crecimiento();
@@ -118,7 +124,7 @@ void control_mensual_autofloreciente()
     {
       DateTime now = RTC.now();
       
-      Serial.println("Estado de Autofloreciente");
+      Serial.println("**Estado de Autofloreciente**");
       fecha();
       
       periodo_luz_autofloreciente();
@@ -148,7 +154,7 @@ void control_mensual_autofloreciente()
     }
  dias = 0;
  EEPROM.write(address, dias);
- Serial.println("Cambiando de estado ");
+ Serial.println("**Cambiando de estado**");
 }
 
 void control_mensual_crecimiento()
@@ -157,7 +163,7 @@ void control_mensual_crecimiento()
     {
       DateTime now = RTC.now();
       
-      Serial.println("Estado de Crecimiento");
+      Serial.println("**Estado de Crecimiento**");
       fecha();
       
       periodo_luz_crecimiento();
@@ -186,7 +192,7 @@ void control_mensual_crecimiento()
       }   
     }
  EEPROM.write(address, dias);
- Serial.println("Cambiando de estado ");
+ Serial.println("**Cambiando de estado**");
 }
 
 void control_mensual_floracion()
@@ -195,7 +201,7 @@ void control_mensual_floracion()
     {
       DateTime now = RTC.now();
       
-      Serial.println("Estado de Floracion");
+      Serial.println("**Estado de Floracion**");
       fecha();
       
       periodo_luz_floracion();
@@ -225,7 +231,7 @@ void control_mensual_floracion()
     }
  dias = 0;
  EEPROM.write(address, dias);
- Serial.println("Cambiando de estado ");
+ Serial.println("**Cambiando de estado**");
 }
 
 void tem_hum_dia()
@@ -350,12 +356,12 @@ void periodo_luz_crecimiento()
   
   if (now.hour() >= 6 && now.hour() <= 23)
   {
-    Serial.println("Periodo de Luz Crecimiento, ON");
+    Serial.println("Periodo de Luz Crecimiento, Luz ON. Dia");
     digitalWrite(luz, HIGH);  
   }
   else if (now.hour() >= 00 && now.hour() <= 5)
   {
-    Serial.println("Periodo de Luz Crecimiento, OFF");
+    Serial.println("Periodo de Luz Crecimiento, Luz OFF. Noche");
     digitalWrite(luz, LOW);
   }
 } 
@@ -365,12 +371,12 @@ void periodo_luz_floracion()
   
   if (now.hour() >= 12 && now.hour() <= 23)
   {
-    Serial.println("Periodo de Luz Floracion, Luz ON");
+    Serial.println("Periodo de Luz Floracion, Luz ON. Dia");
     digitalWrite(luz, HIGH);  
   }
   else if (now.hour() >= 00 && now.hour() <= 11)
   {
-    Serial.println("Periodo de Luz Floracion, Luz OFF");
+    Serial.println("Periodo de Luz Floracion, Luz OFF. Noche");
     digitalWrite(luz, LOW);
   }
 } 
@@ -380,12 +386,12 @@ void periodo_luz_autofloreciente()
   
   if (now.hour() >= 4 && now.hour() <= 23)
   {
-    Serial.println("Periodo de Luz Autoflorecientes, Luz ON.");
+    Serial.println("Periodo de Luz Autoflorecientes, Luz ON. Dia");
     digitalWrite(luz, HIGH);  
   }
   else if (now.hour() >= 00 && now.hour() <= 3)
   {
-    Serial.println("Periodo de Luz Autoflorecientes, Luz OFF.");
+    Serial.println("Periodo de Luz Autoflorecientes, Luz OFF. Noche");
     digitalWrite(luz, LOW);
   }
 } 
